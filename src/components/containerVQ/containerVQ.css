@@ -14,7 +14,7 @@
 }
 
 .containervq__videoContent {
-    display: flex;
+    /* display: flex; */
     gap: 15px;
     justify-content: space-between;
 }

@@ -2,20 +2,12 @@ import { Button } from "@mui/material"
 import useVideoQuestion from "../../hooks/useVideoQuestion"
 import "./cardVideo.css"
 import VideoRecorder from "../videoRecorder/VideoRecorder"
-import { useEffect, useRef } from "react"
 
-
-
-
-
-const CardVideo = ({ dataVideo, width, index, showRecButton = true }) => {
+const CardVideo = ({ dataVideo, width, index, showRecButton = true, noClick = false }) => {
 
     let { handleOpen, indexVQ, setIndexVQ, dataVQ, setDataVQ, videos, setVideos, setSomethingRecording } = useVideoQuestion()
 
-
-
-    let handleOandM = () => {
-        // indexVQ.current = dataVideo.id
+    let handleOandM = () => {        
         handleOpen()
 
         let indexArray = dataVQ.findIndex((d) => d.id == dataVideo.id)
@@ -23,15 +15,14 @@ const CardVideo = ({ dataVideo, width, index, showRecButton = true }) => {
         setSomethingRecording(false)
     }
 
-
-    let fff = (dtra) => {
+    let updateRender = (data) => {
         setDataVQ((prev) =>
-            prev.map((d) => {
-                if (d.id !== dtra.id) return d
+            prev.map((e) => {
+                if (e.id !== data.id) return e
 
                 return {
-                    ...d,
-                    ...dtra
+                    ...e,
+                    ...data
                 }
             })
         )
@@ -40,15 +31,13 @@ const CardVideo = ({ dataVideo, width, index, showRecButton = true }) => {
     return (
         <div className="video-card" style={{ width }}>
             <div className="video-card__video">
-                <VideoRecorder showRecButton={showRecButton} videos={videos} setVideos={setVideos} fff={fff} dataVideo={dataVideo} width={width}></VideoRecorder>
+                <VideoRecorder showRecButton={showRecButton} videos={videos} setVideos={setVideos} updateRender={updateRender} dataVideo={dataVideo} width={width}></VideoRecorder>
             </div>
-            <div className="video-card__question-box" onClick={handleOandM}>
+            <div className="video-card__question-box"  onClick={ noClick ? () => {}:handleOandM} >
                 <div className="video-card__question-square"></div>
-                <Button title={dataVideo.question}>{dataVideo.question}</Button>
-                {/* <div className="video-card__question-text">{dataVideo.question}</div> */}
+                <Button title={dataVideo.question}>{dataVideo.question}</Button>                
                 <div className="video-card__question-square"></div>
-            </div>
-            {/* <button onClick={dino}>dsada</button> */}
+            </div>            
         </div>
     )
 }

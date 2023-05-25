@@ -1,18 +1,12 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import './videoRecorder.css'
-
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
-import PhotoCameraFrontIcon from '@mui/icons-material/PhotoCameraFront';
-import VideoCameraFrontIcon from '@mui/icons-material/VideoCameraFront';
 import useVideoQuestion from "../../hooks/useVideoQuestion";
 import CenterFocusStrongIcon from '@mui/icons-material/CenterFocusStrong';
-// import { set } from "lodash";
 
-const VideoRecorder = ({ fff, width, dataVideo, videos, setVideos, showRecButton }) => {
+const VideoRecorder = ({ updateRender, width, dataVideo, videos, setVideos, showRecButton }) => {
     const [isRecording, setIsRecording] = useState(false);
-    const videoRef = useRef(null);
-    // const videoRefDos = useRef(null);
+    const videoRef = useRef(null);    
     const streamRef = useRef(null);
     const [downloadLink, setDownloadLink] = useState("");
     const streamRecorderRef = useRef(null);
@@ -43,24 +37,15 @@ const VideoRecorder = ({ fff, width, dataVideo, videos, setVideos, showRecButton
     }, [videos])
 
     let clearIntervalTimerCounter = () => {
-
-
         clearInterval(interval.current)
-        // interval.current = null
-
         setTimeCounter(0)
-        // setCorriendo(false);
     }
+
     let createIntervalTimerCounter = () => {
-
-
         interval.current = setInterval(() => {
             setTimeCounter((tiempo) => tiempo + 1);
         }, 1000);
-
-
     }
-
 
     const timeFormater = (seconds) => {
         const minutes = Math.floor(seconds / 60);
@@ -68,16 +53,13 @@ const VideoRecorder = ({ fff, width, dataVideo, videos, setVideos, showRecButton
         return `${minutes}:${missingSeconds.toString().padStart(2, '0')}`;
     };
 
-
     function startRecording() {
-
         if (isRecording) {
             return;
         }
         if (!streamRef.current) {
             return;
         }
-
 
         streamRecorderRef.current = new MediaRecorder(streamRef.current);
         streamRecorderRef.current.start();
@@ -90,7 +72,7 @@ const VideoRecorder = ({ fff, width, dataVideo, videos, setVideos, showRecButton
 
         timerRef.current = setTimeout(() => {
             stopRecording();
-        }, 2 * 60 * 1000); // 2 minutos en milisegundos
+        }, 2 * 60 * 1000);
     }
 
     useEffect(function () {
@@ -100,6 +82,7 @@ const VideoRecorder = ({ fff, width, dataVideo, videos, setVideos, showRecButton
             createIntervalTimerCounter()
             return;
         }
+
         if (chunks.current.length === 0) {
             return;
         }
@@ -107,13 +90,13 @@ const VideoRecorder = ({ fff, width, dataVideo, videos, setVideos, showRecButton
         const blob = new Blob(chunks.current, {
             type: "video/x-matroska;codecs=avc1,opus",
         });
-        // setDownloadLink(URL.createObjectURL(blob));
+        
         setVideos((sv) => {
-            if (sv.some((dd) => dd.idVideo == dataVideo.id)) {
-                return sv.map((d) => {
-                    if (d.idVideo !== dataVideo.id) return d
+            if (sv.some((vidSome) => vidSome.idVideo == dataVideo.id)) {
+                return sv.map((e) => {
+                    if (e.idVideo !== dataVideo.id) return e
                     return {
-                        ...d,
+                        ...e,
                         data: URL.createObjectURL(blob)
                     }
                 })
@@ -133,7 +116,6 @@ const VideoRecorder = ({ fff, width, dataVideo, videos, setVideos, showRecButton
 
     function stopRecording() {
 
-
         if (!streamRecorderRef.current) {
             return;
         }
@@ -142,18 +124,14 @@ const VideoRecorder = ({ fff, width, dataVideo, videos, setVideos, showRecButton
         setTimeout(() => {
             setIsRecording(false);
             clearIntervalTimerCounter()
-            fff({
+            updateRender({
                 ...dataVideo,
                 answered: true,
 
             })
         }, 100)
 
-
     }
-
-
-
 
     useEffect(function () {
         async function prepareStream() {
@@ -233,6 +211,9 @@ const VideoRecorder = ({ fff, width, dataVideo, videos, setVideos, showRecButton
     }
     return (
         <div className="videoRecorder">
+            {/* EN CASO DE QUE NO TE DETECTEN LOS CONTROLADORES DE AUDIO Y VIDEO, DESCOMENTAR EL SIGUIENTE CODIGO*/}
+
+
             {/* <div>
                 <select id="videoSource" name="videoSource" value={videoSource}>
                     {videoSourceOptions.map((option) => (
@@ -257,26 +238,12 @@ const VideoRecorder = ({ fff, width, dataVideo, videos, setVideos, showRecButton
                 <video ref={videoRef} autoPlay muted playsInline></video>
             </div>
             <div className="containerVideoET" style={!isRecording ? {} : { display: 'none' }}>
-
-                {downloadLink && <video style={{ width, height: '100%' }} src={downloadLink} ref={videoRef2} controls controlsList="nodownload,nofullscreen,noseekback,noseekforward"></video>}
-
-                {/* {downloadLink && (
-                    <a href={downloadLink} download="file.mp4">
-                        Descargar
-                    </a>
-                )} */}
+                {downloadLink && <video style={{ width, height: '100%' }} src={downloadLink} ref={videoRef2} controls controlsList="nodownload,nofullscreen,noseekback,noseekforward"></video>}                
             </div>
 
 
 
-            <div className="option-VQ">
-
-                {/* <button onClick={handlePlay} disabled={isRecording}>
-                    play
-                </button>
-                <button onClick={handlePause} disabled={isRecording}>
-                    rrrr
-                </button> */}
+            <div className="option-VQ">                
                 {
                     showRecButton ?
                         isRecording ? <button onClick={stopRecording} disabled={!isRecording}>

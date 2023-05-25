@@ -1,13 +1,12 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import "./modalVideo.css"
 import { Button, Box, Modal } from "@mui/material"
 import useVideoQuestion from "../../hooks/useVideoQuestion";
 import CardVideo from "../cardVideo/CardVideo";
 
-
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import BlockIcon from '@mui/icons-material/Block';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 
 const ModalVideo = () => {
@@ -24,14 +23,8 @@ const ModalVideo = () => {
         p: 4,
     };
 
-    // let [nextOrSend, setNextOrSend] = useState(true)
     let [indexMV, setIndexMV] = useState(0)
     const { dataVQ, setDataVQ, open, handleClose, indexVQ, setIndexVQ, somethingRecording } = useVideoQuestion()
-
-
-
-
-
 
     useEffect(() => {
 
@@ -39,7 +32,7 @@ const ModalVideo = () => {
 
     }, [indexVQ])
 
-    const ccc = () => {
+    const nextQuestion = () => {
 
 
         if (indexMV < dataVQ.length - 1) {
@@ -47,14 +40,14 @@ const ModalVideo = () => {
         }
     }
 
-    const ant = () => {
+    const prevQuestion = () => {
 
         if (indexMV > 0) {
             setIndexMV(indexMV - 1)
         }
     }
 
-    const terminar = () => {
+    const finish = () => {
         handleClose()
         setIndexVQ('')
     }
@@ -68,30 +61,26 @@ const ModalVideo = () => {
             >
                 <Box sx={style}>
                     <div className="contentModal">
-                        <Button onClick={terminar}>{`<--`} Volver</Button>
+                        <Button onClick={finish} disabled={somethingRecording}> <ArrowBackIcon></ArrowBackIcon> Volver</Button>
 
-                        {/* <div className="contentVideo">
-                            dsds
-                        </div> */}
-                        <CardVideo index={indexMV} width={600} dataVideo={dataVQ[indexMV]}></CardVideo>
+                        <CardVideo index={indexMV} width={600} dataVideo={dataVQ[indexMV]} noClick={true}></CardVideo>
                         <div className="modal__contentButton">
 
                             <div className="modal__groupButtons">
-                                <Button onClick={ant} disabled={somethingRecording}>Anterior</Button>
-                                <Button onClick={ccc} disabled={somethingRecording}>Siguiente</Button>
+                                <Button onClick={prevQuestion} disabled={somethingRecording}>Anterior</Button>
+                                <Button onClick={nextQuestion} disabled={somethingRecording}>Siguiente</Button>
 
                             </div>
-                            {/* <Button onClick={terminar} style={dataVQ.every((el) => el.answered == true) ? {} : { display: 'none' }}>Terminar</Button> */}
-
-                            <div className="legenda">
+                            
+                            
+                            <div className="checkLists">
                                 {dataVQ.map((d, i) => {
 
-                                    return d.answered ? <CheckCircleIcon key={i + 'lgen'} style={{ color: '#444', ...(i == indexMV ? { fontSize: '2rem' } : {}) }}></CheckCircleIcon> : <ErrorOutlineIcon key={i + 'lgen'} style={{ color: '#444', ...(i == indexMV ? { fontSize: '2rem' } : {}) }}></ErrorOutlineIcon>
+                                    return d.answered ? <CheckCircleIcon key={i + 'check'} style={{ color: '#444', ...(i == indexMV ? { fontSize: '2rem' } : {}) }}></CheckCircleIcon> : <ErrorOutlineIcon key={i + 'check'} style={{ color: '#444', ...(i == indexMV ? { fontSize: '2rem' } : {}) }}></ErrorOutlineIcon>
                                 })}
                             </div>
-                        </div>
-
-                        {/* <button onClick={dino}>dsada</button> */}
+                            <Button onClick={finish} style={dataVQ.every((el) => el.answered == true) ? {} : { display: 'none' }} disabled={somethingRecording}>Terminar</Button>
+                        </div>                        
                     </div>
                 </Box>
             </Modal>

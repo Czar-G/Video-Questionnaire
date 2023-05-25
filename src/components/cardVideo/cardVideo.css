@@ -1,11 +1,6 @@
-/* body {
-    all: none;
-} */
-
 .video-card {
     background-color: black;
     overflow: hidden;
-    /* width: 600px; */
     height: 420px;
     border-radius: 10px;
     display: flex;
@@ -26,7 +21,6 @@
     background-color: #c4c4c4;
     border-radius: 0 0 10px 10px;
     display: flex;
-    /* flex: 1; */
     justify-content: center;
     align-items: center;
 }

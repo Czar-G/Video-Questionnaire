@@ -1,9 +1,6 @@
-.contentModal {}
-
 .modal__contentButton {
     display: flex;
-    flex-direction: column;
-    /* justify-content: center; */
+    flex-direction: column; 
 
 }
 
@@ -12,7 +9,7 @@
     justify-content: space-around;
 }
 
-.legenda {
+.checkLists {
     display: flex;
     justify-content: center;
     align-items: center;
